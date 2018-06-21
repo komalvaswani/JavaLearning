@@ -1,68 +1,41 @@
 package com.sony.temp;
 
-import java.beans.beancontext.BeanContextServiceRevokedListener;
 import java.util.Arrays;
 import java.util.Collections;
 
 public class TimeConverterImpl implements TimeConverter {
+	
+	int hour=0, minute = 0, second = 0;
 
     @Override
     public String convertTime(String aTime) {
     	// TODO Auto-generated method stub
+    	
 		String firstLine = null, SecondLine = null, ThirdLine = null, FourthLine = null, FifthLine = null;
 		String finalResult = null;
 		try {
-			if (aTime != null) {
-				String[] splittedTime = aTime.split(":");
-				if (splittedTime.length == 3) {
-					int hour = Integer.parseInt(splittedTime[0]);
-					int minute = Integer.parseInt(splittedTime[1]);
-					int second = Integer.parseInt(splittedTime[2]);
+			if (validate(aTime)) {				
 					// print first line
-					if (second >= 0 && second < 60) {
-						if (second % 2 == 0)
-							firstLine = "Y";
-						else
-							firstLine = "0";
-					}
-					else
-						throw new IllegalArgumentException("provided second value is not valid");
+						firstLine = (second % 2 == 0 ? "Y" : "0");
+						
 					// print second and third line
-
-					if (hour >= 0 && hour < 25) {
 						int lightOn = hour / 5;
 						int lightOff = 4 - lightOn;
-
-						SecondLine = String.join("", Collections.nCopies(lightOn, "R"));
-						SecondLine += String.join("", Collections.nCopies(lightOff, "0"));
+						SecondLine = generateTimeLine(lightOn, lightOff,"R");						
 
 						lightOn = hour % 5;
 						lightOff = 4 - lightOn;
-						ThirdLine = String.join("", Collections.nCopies(lightOn, "R"));
-						ThirdLine += String.join("", Collections.nCopies(lightOff, "0"));
-
-					}
-					else
-						throw new IllegalArgumentException("provided hour value is not valid");
+						ThirdLine = generateTimeLine(lightOn, lightOff, "R");
+											
 					// print fourth and fifth line
-
-					if (minute >= 0 && minute < 60) {
-						int lightOn = minute / 5;
-						int lightOff = 11 - lightOn;
-
-						FourthLine = String.join("", Collections.nCopies(lightOn, "Y")).replaceAll("YYY", "YYR");
-						FourthLine += String.join("", Collections.nCopies(lightOff, "0"));
-
+						lightOn = minute / 5;
+						lightOff = 11 - lightOn;
+						FourthLine = generateTimeLine(lightOn, lightOff, "Y").replaceAll("YYY", "YYR");
+						
 						lightOn = minute % 5;
 						lightOff = 4 - lightOn;
-						FifthLine = String.join("", Collections.nCopies(lightOn, "Y"));
-						FifthLine += String.join("", Collections.nCopies(lightOff, "0"));
-
-					}
-					else
-						throw new IllegalArgumentException("provided minute value is not valid");
-				} else
-					throw new IllegalArgumentException("provided time value is not valid");
+						FifthLine = generateTimeLine(lightOn, lightOff, "Y");
+									
 			}
 		} // end of try
 		catch (Exception e) {
@@ -76,11 +49,31 @@ public class TimeConverterImpl implements TimeConverter {
     
     }
     
-        
+    public boolean validate(String time)
+    {
+		boolean flag = false;
+		String[] splittedTime = time.split(":");
+		hour = Integer.parseInt(splittedTime[0]);
+		minute = Integer.parseInt(splittedTime[1]);
+		second = Integer.parseInt(splittedTime[2]);
+		if (hour >= 0 && hour <= 24 && minute >= 0 && minute <= 59 && second >= 0 && second <= 59) {
+			flag = true;
+		} else {
+
+			flag = false;
+		}
+		return flag;
+    }
+    
+    public String generateTimeLine(int lightOn,int lightOff,String color)
+    {
+    	return (String.join("", Collections.nCopies(lightOn, color)) + String.join("", Collections.nCopies(lightOff, "0")));
+    }
+    
     public static void main(String[] args) {
     	
-		TimeConverterImpl tc = new TimeConverterImpl();
-		System.out.println(tc.convertTime("24:00:00"));
+		TimeConverterImpl tc = new TimeConverterImpl();		
+		System.out.println(tc.convertTime("13:17:00"));
 	}
 
 }
