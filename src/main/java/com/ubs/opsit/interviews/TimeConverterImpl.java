@@ -16,7 +16,7 @@ public class TimeConverterImpl implements TimeConverter {
 		try {
 			if (validate(aTime)) {				
 					// print first line
-						firstLine = (second % 2 == 0 ? "Y" : "0");
+						firstLine = (second % 2 == 0 ? "Y" : "O");
 						
 					// print second and third line
 						int lightOn = hour / 5;
@@ -37,6 +37,10 @@ public class TimeConverterImpl implements TimeConverter {
 						FifthLine = generateTimeLine(lightOn, lightOff, "Y");
 									
 			}
+			else
+			{
+				throw new IllegalArgumentException("Please provide valid Time!!");
+			}
 		} // end of try
 		catch (Exception e) {
 			// TODO: handle exception
@@ -52,28 +56,33 @@ public class TimeConverterImpl implements TimeConverter {
     public boolean validate(String time)
     {
 		boolean flag = false;
-		String[] splittedTime = time.split(":");
-		hour = Integer.parseInt(splittedTime[0]);
-		minute = Integer.parseInt(splittedTime[1]);
-		second = Integer.parseInt(splittedTime[2]);
-		if (hour >= 0 && hour <= 24 && minute >= 0 && minute <= 59 && second >= 0 && second <= 59) {
-			flag = true;
-		} else {
+		if (time != null) {
+			String[] splittedTime = time.split(":");
+			if (splittedTime.length == 3) {
+				hour = Integer.parseInt(splittedTime[0]);
+				minute = Integer.parseInt(splittedTime[1]);
+				second = Integer.parseInt(splittedTime[2]);
+				if (hour >= 0 && hour <= 24 && minute >= 0 && minute <= 59 && second >= 0 && second <= 59) {
+					flag = true;
+				} else {
 
-			flag = false;
+					flag = false;
+				}
+			}
 		}
 		return flag;
+		
     }
     
     public String generateTimeLine(int lightOn,int lightOff,String color)
     {
-    	return (String.join("", Collections.nCopies(lightOn, color)) + String.join("", Collections.nCopies(lightOff, "0")));
+    	return (String.join("", Collections.nCopies(lightOn, color)) + String.join("", Collections.nCopies(lightOff, "O")));
     }
     
     public static void main(String[] args) {
     	
 		TimeConverterImpl tc = new TimeConverterImpl();		
-		System.out.println(tc.convertTime("13:17:00"));
+		System.out.println(tc.convertTime("00:00:00"));
 	}
 
 }
