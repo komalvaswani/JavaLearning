@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.com.java.model.Task;
@@ -63,7 +64,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 			int resultCode = statement.executeUpdate();
 			if(resultCode > 0)
 				System.out.println("task inserted successfully !!");
-			
+			//conn.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -74,12 +75,56 @@ public class TaskRepositoryImpl implements TaskRepository {
 	@Override
 	public void update(Task task) {
 		// TODO Auto-generated method stub
+		String sql = "UPDATE Task SET Task_name = ? where Task_id = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, task.getTaskName());
+			stmt.setInt(2, task.getTaskId());
+			int resultCode = stmt.executeUpdate();
+			if(resultCode > 0)
+				System.out.println("task having taskId as "+ task.getTaskId() +" succesfully updated");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 	}
 
 	@Override
 	public void delete(int taskId) {
 		// TODO Auto-generated method stub
+		String sql = "DELETE from Task where Task_id = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, taskId);
+			int resultCode = stmt.executeUpdate();
+			if(resultCode > 0)
+				System.out.println("task having taskId as "+taskId+ " deleted successfully");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public void count() {
+		// TODO Auto-generated method stub
+		String sql = "SELECT count(*) AS total FROM Task";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			System.out.println("total number of records in task table is: "+ rs.getInt("total"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

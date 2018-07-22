@@ -8,5 +8,6 @@ public interface TaskRepository {
 	public void add(Task task);
 	public void update(Task task);
 	public void delete(int taskId);
-
+	public void count();
+	
 }

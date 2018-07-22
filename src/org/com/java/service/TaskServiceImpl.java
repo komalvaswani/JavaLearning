@@ -26,12 +26,21 @@ public class TaskServiceImpl implements TaskService {
 	@Override
 	public void updateTask(Task task) {
 		// TODO Auto-generated method stub
+		taskRepository.update(task);
 		
 	}
 
 	@Override
 	public void deleteTask(int taskId) {
 		// TODO Auto-generated method stub
+		taskRepository.delete(taskId);
+		
+	}
+
+	@Override
+	public void totalTaskCount() {
+		// TODO Auto-generated method stub
+		taskRepository.count();
 		
 	}
 
